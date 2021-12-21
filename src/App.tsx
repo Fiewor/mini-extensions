@@ -2,7 +2,7 @@ import { useState } from "react"
 import './App.css';
 
 const Airtable = require('airtable');
-const base = new Airtable({apiKey: 'keyWpmoX3WKu87slO'}).base('app8ZbcPx7dkpOnP0');
+const base = new Airtable({apiKey: process.env.API_KEY}).base(process.env.BASE_KEY);
 const studentTable = base('Students');
 const classTable = base('Classes');
 
