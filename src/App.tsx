@@ -2,31 +2,35 @@ import { useState } from "react"
 import './App.css';
 
 const Airtable = require('airtable');
-const base = new Airtable({apiKey: process.env.API_KEY}).base(process.env.BASE_KEY);
+const base = new Airtable({apiKey: process.env.REACT_APP_API_KEY}).base(process.env.REACT_APP_BASE_KEY);
 const studentTable = base('Students');
 const classTable = base('Classes');
+// let arr: string[] = []
 
 interface Data{
-    name: string,
-    students: string[]
+  name: string,
+  students: string[]
 }
 
 export default function App() {
   const [user, setUser] = useState("")
-  const [data, setData] = useState<Data | null>(null)
+  // const [data, setData] = useState<Data | null>(Data[])
+  const [arr, setArr] = useState([])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value)
   }
 
-  let currentClass: any[], currentStudent: any[]
+  let currentClass: string[], currentStudent: string[]
+
   const getRecords = async () => {
     studentTable.select({
       filterByFormula: `(name = '${user}')`,
       view: 'Grid view'
-    }).firstPage(function(err: any, records: any[]) {
+    }).firstPage(function(err: string, records: any[]) {
 
         if (err) { console.error(err); return; }
+        console.log("records",records);
         
         // use class ID to go to class DB. returns name of class and id of each student in class
         records.forEach(function(record) {
@@ -35,16 +39,19 @@ export default function App() {
           currentClass.forEach(function(availableClass) {
             classTable.find(availableClass, function(err: string, record: any) {
               if (err) { console.error(err); return; }
-              setData(record.fields)
+              // setData(record.fields)
               // get name of class here -> record.fields.Name
+              setArr(record.fields.Name)
               currentStudent = record.fields.Students
-
+              // console.log("currentStudent",currentStudent);
+              
               // use id of students to go to student DB and retrieve names of students
               currentStudent.forEach(stud=>{
                 classTable.find(stud, function(err: string, record: any) {
                   if (err) { console.error(err); return; }
                   // name of students -> record.fields.Name
-                  // save where? how to output?
+                  // setArr(record.fields.Name)
+                  // console.log("studentName",record.fields.Name);
                 });
               })
             });
@@ -54,17 +61,23 @@ export default function App() {
 
       });
   }
-  console.log("Data",data)
 
   return (
     <div className="App">
-      <label htmlFor="name">Student Name: </label>
-      <input type="text" value={user} onChange={onChange}/>
-      <br />
+      <div>
+        <label htmlFor="name">Student Name: 
+          <input type="text" value={user} onChange={onChange}/>
+        </label>
+      </div>
       <button onClick={getRecords}>Login</button>
       
         {
-          data && <p>{data.name}</p>
+          arr && arr.map((a, index) => {
+            return (
+              <p key={index}>{a}</p>
+            )
+          })
+          
           // for (const name in object) {
           //   if (Object.prototype.hasOwnProperty.call(object, name)) {
           //     const element = object[name];

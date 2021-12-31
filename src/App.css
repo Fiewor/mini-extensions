@@ -1,5 +1,17 @@
-.App {
+body {
   display: flex;
   justify-content: center;
   align-content: center;
+}
+.App {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  margin: auto 0;
+}
+.App > div {
+  padding-bottom: 1rem;
+}
+
+.App > div > input {
 }
