@@ -35,15 +35,16 @@ export default function App() {
         // use class ID to go to class DB. returns name of class and id of each student in class
         records.forEach(function(record) {
           currentClass = record.get('Classes')
+          console.log("currentClass",currentClass);
           
           currentClass.forEach(function(availableClass) {
             classTable.find(availableClass, function(err: string, record: any) {
               if (err) { console.error(err); return; }
-              // setData(record.fields)
+              console.log("record.fields",record.fields)
               // get name of class here -> record.fields.Name
               setArr(record.fields.Name)
               currentStudent = record.fields.Students
-              // console.log("currentStudent",currentStudent);
+              console.log("currentStudent",currentStudent);
               
               // use id of students to go to student DB and retrieve names of students
               currentStudent.forEach(stud=>{
@@ -51,7 +52,7 @@ export default function App() {
                   if (err) { console.error(err); return; }
                   // name of students -> record.fields.Name
                   // setArr(record.fields.Name)
-                  // console.log("studentName",record.fields.Name);
+                  console.log("studentName",record.fields.Name);
                 });
               })
             });
@@ -72,11 +73,11 @@ export default function App() {
       <button onClick={getRecords}>Login</button>
       
         {
-          arr && arr.map((a, index) => {
-            return (
-              <p key={index}>{a}</p>
-            )
-          })
+          // arr && arr.map((a, index) => {
+          //   return (
+          //     <p key={index}>{a}</p>
+          //   )
+          // })
           
           // for (const name in object) {
           //   if (Object.prototype.hasOwnProperty.call(object, name)) {
